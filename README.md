@@ -2,6 +2,30 @@
 
 Corne 分体键盘的 ZMK 固件配置，已接入 [DYA Studio](https://studio.dya.cormoran.works/)。
 
+## 适配的硬件
+
+**[Corne V4 Pro-Micro Edition](https://github.com/klouderone/CorneV4ProMicroEdition)**
+（Kea Workshop 出品，klouderone 维护的分支）—— foostan 原版 Corne V4 外形，
+保留 Pro Micro 尺寸插座，可插 [nice!nano v2](https://nicekeyboards.com/nice-nano) 做无线，
+也可插 Elite-C v4 做有线。
+
+| 项目 | 说明 |
+| --- | --- |
+| 微控制器 | nice!nano v2（本配置的目标）/ 其他 Pro Micro 尺寸板 |
+| 轴座 | Kailh **MX** 与 **Choc** 热插拔底都支持，带拔插可做 5 列 |
+| 二极管 | SMD 1N4148 与插件二极管都支持 |
+| 显示 | 0.91" OLED（I²C）或 nice!view 扩展板 |
+| 连接 | 3.5mm TRRS 分体互联 + 电池焊盘 / PH2 座 / 电源开关 |
+| 底灯 | ❌ 无 RGB 底灯，所以配置里的 underglow 是关闭的 |
+| 键距 | 19.05mm（V4 相比 V3 由 19mm 微调） |
+
+> 本配置按 **MX 轴体** 编译矩阵接线。PCB 的 Choc 轴座虽然硬件兼容，
+> 但 Choc 的行列引脚分配与 MX 不同，ZMK 自带的 `corne` shield 只定义了 MX 版本。
+> 若实际焊接的是 Choc 轴体，需要另行配置 Choc 矩阵，本仓库暂未包含。
+
+> ⚠️ 该板是无线 + 有线两用设计：**插电池时不要用 TRRS**，**用有线时不要接电池**。
+> 本仓库的固件为无线版本（nice!nano）。
+
 ## DYA Studio
 
 浏览器打开 <https://studio.dya.cormoran.works/>，按 splash 页面选择连接方式：
@@ -58,6 +82,14 @@ Actions → 最新一次构建 → Artifacts → `zmk-firmware`，内含以下 `
 带屏幕的两个版本余量较小，后续若想再加功能优先选无屏版。
 
 左右半分别刷对应文件。`settings_reset` 刷完后再刷正常固件即可。
+
+### 显示接线
+
+两个显示变体都对应板上的排针座，选一个刷就行：
+
+- **OLED 变体** — 插 4 针 PH5 座，I²C，地址 `0x3C`，128×32
+- **nice!view 变体** — 插 5 针 PH5 座，SPI（SCK P0.20 / MOSI P0.17 / MISO P0.25 / CS P1.1）
+  自带 `CONFIG_SSD1306=n`，不会和 OLED 驱动打架
 
 ## 本地构建
 
