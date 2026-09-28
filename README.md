@@ -22,8 +22,20 @@ Firefox 与 Safari 不支持。
 - **Device Settings** — 电源管理（idle / deep sleep 超时）、各分半独立设置
 - **Troubleshooting** — 电量、固件版本、uptime；逐键抖键检测；复制完整支持报告
 
-> **按 OS 自动切层**需要 `corne_right` 半边开启 OS Detection 与 Default Layer 模块。
+> **按 OS 自动切层**需要 central 半边开启 OS Detection 与 Default Layer 模块。
 > Corne 无轨迹球，因此 DYA Studio 的 Trackball Tuning 与相关模块（PMW3610 驱动）不适用。
+
+### 左右半分配
+
+**本键盘的 central（主控）接在左手** —— USB 与 BLE 都接左手，DYA Studio 网页也只会连上左手。
+
+| | 左手 · central | 右手 · peripheral |
+| --- | --- | --- |
+| USB / BLE 连接 | 是 | — |
+| Studio 通信 | 是 | — |
+| 连接管理、OS 识别、按 OS 切层 | 是 | — |
+| 设置中继 | 发起 | 接收并应用 |
+| 抖键诊断、看门狗 | 汇总两半 | 检测本半并上报 |
 
 ### Studio 锁定
 
@@ -34,13 +46,16 @@ Firefox 与 Safari 不支持。
 
 Actions → 最新一次构建 → Artifacts → `zmk-firmware`，内含以下 `.uf2`：
 
-| Artifact | 说明 |
-| --- | --- |
-| `corne_left` / `corne_right` | **无屏版**，flash 余量最大，推荐日常使用 |
-| `corne_left_oled` / `corne_right_oled` | SSD1306 OLED 显示 |
-| `corne_left_niceview` / `corne_right_niceview` | nice!view 适配板 |
-| `corne_left_studio_unlocked` / `corne_right_studio_unlocked` | 无屏 + Studio 常开（免解锁） |
-| `settings_reset` | 清除所有持久化设置（含 DYA Studio 保存的配置） |
+| Artifact | 说明 | 体积 |
+| --- | --- | --- |
+| `corne_left` / `corne_right` | **无屏版**，flash 余量最大，推荐日常使用 | 458 / 374 KB |
+| `corne_left_oled` / `corne_right_oled` | SSD1306 OLED 显示 | 726 / 641 KB |
+| `corne_left_niceview` / `corne_right_niceview` | nice!view 适配板 | 781 / 627 KB |
+| `corne_left_studio_unlocked` / `corne_right_studio_unlocked` | 无屏 + Studio 常开（免解锁） | 458 / 374 KB |
+| `settings_reset` | 清除所有持久化设置（含 DYA Studio 保存的配置） | 103 KB |
+
+体积以 UF2 文件大小为准，nice!nano 内部 flash 为 1 MB，9 个变体都能装下。
+带屏幕的两个版本余量较小，后续若想再加功能优先选无屏版。
 
 左右半分别刷对应文件。`settings_reset` 刷完后再刷正常固件即可。
 
@@ -76,9 +91,11 @@ config/
   west-isolated.yml       依赖装到 ./dependencies
   west-workspace.yml      依赖装到 west topdir
 boards/shields/corne/
-  Kconfig.defconfig       键盘名、分体角色
-  corne_left.conf         左手（peripheral）全部 Kconfig
-  corne_right.conf        右手（central）全部 Kconfig
+  Kconfig.defconfig       键盘名、分体角色（central = 左手）
+  Kconfig.shield          shield 标识
+  boards/                 板级 overlay（nice!nano）
+  corne_left.conf         左手（central）全部 Kconfig
+  corne_right.conf        右手（peripheral）全部 Kconfig
 snippets/
   corne-oled/             OLED 显示
   corne-no-display/       禁用板载 OLED，回收 flash
