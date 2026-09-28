@@ -1,0 +1,16 @@
+if SHIELD_CORNE_LEFT
+
+# 本键盘的 central（主控）接在左手：左手负责 USB / BLE 与 Studio 通信
+config ZMK_KEYBOARD_NAME
+    # 蓝牙设备名限制 16 字节
+    default "Corne DYA"
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+endif
+
+if SHIELD_CORNE_LEFT || SHIELD_CORNE_RIGHT
+config ZMK_SPLIT
+    default y
+endif
