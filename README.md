@@ -1,6 +1,27 @@
 # zmk-config-corne
 
+[English](./README.en.md) · **简体中文**
+
 Corne 分体键盘的 ZMK 固件配置，已接入 [DYA Studio](https://studio.dya.cormoran.works/)。
+
+## 关于 Corne
+
+[Corne](https://github.com/foostan/crkbd)（又名 **crkbd**，取自 cornetto 意式甜点的名字）
+是日本开发者 foostan（Kosuke Adachi）设计的开源分体人体工学键盘，
+最初发布于 2018 年 4 月，灵感来自 Helix 键盘。
+
+它的核心特征：
+
+- **3×6 列错位 + 3 枚拇指键**（单侧），共 42 键。列错位（column stagger）能让手指
+  沿各自自然的列方向上下移动，比行错位更省手腕动作 —— 这一布局后来启发了大量同类设计
+- **对称双 PCB + TRRS 互联** —— 左右完全相同，单价低、易焊接
+- **开放式** —— 从第一天就开源，任何人都能自己打样、改键位、做外壳衍生
+- **可拆最外侧列** —— 多数版本的最外列可拔掉，变成 3×5+3 的 34 键布局
+
+正因为设计开放、门槛低，Corne 成为近十年最流行的分体键盘设计之一，
+衍生出 Classic / Cherry / Chocolate / Light 等官方分支，以及大量社区版本。
+
+本仓库针对的是 **V4 外形 + Pro Micro 尺寸插座**这一支，见下一节。
 
 ## 适配的硬件
 
@@ -18,6 +39,10 @@ Corne 分体键盘的 ZMK 固件配置，已接入 [DYA Studio](https://studio.d
 | 连接 | 3.5mm TRRS 分体互联 + 电池焊盘 / PH2 座 / 电源开关 |
 | 底灯 | ❌ 无 RGB 底灯，所以配置里的 underglow 是关闭的 |
 | 键距 | 19.05mm（V4 相比 V3 由 19mm 微调） |
+
+> **别买错版本。** foostan 官方的 Corne V4 是**板载 RP2040**、USB-C 接口，
+> 既插不了 nice!nano 也用不了本仓库的无线固件。只有 Kea Workshop 的
+> Pro-Micro 版才兼容 Pro Micro 尺寸的板子。
 
 > 本配置按 **MX 轴体** 编译矩阵接线。PCB 的 Choc 轴座虽然硬件兼容，
 > 但 Choc 的行列引脚分配与 MX 不同，ZMK 自带的 `corne` shield 只定义了 MX 版本。
@@ -60,6 +85,10 @@ Firefox 与 Safari 不支持。
 | 连接管理、OS 识别、按 OS 切层 | 是 | — |
 | 设置中继 | 发起 | 接收并应用 |
 | 抖键诊断、看门狗 | 汇总两半 | 检测本半并上报 |
+
+> ZMK 默认约定是右手为主控。如果你的接线是 USB 插右手，把
+> `boards/shields/corne/Kconfig.defconfig` 里的 `SHIELD_CORNE_LEFT` 改成
+> `SHIELD_CORNE_RIGHT`，并把两份 conf 的模块归属对调即可。
 
 ### Studio 锁定
 
@@ -104,9 +133,9 @@ west init -l config
 
 west update --narrow
 west zephyr-export
-west zmk-build            # 构建 build.yaml 里的全部变体
-west zmk-build -a corne_right   # 只构建某一个
-west zmk-build --flash    # 构建后直接烧录
+west zmk-build                 # 构建 build.yaml 里的全部变体
+west zmk-build -a corne_right  # 只构建某一个
+west zmk-build --flash         # 构建后直接烧录
 ```
 
 固件输出在 `./build/<artifact>/zephyr/zmk.uf2`。
