@@ -1,35 +1,54 @@
-# This file generates the GitHub Actions matrix
-# For simple board + shield combinations, add them
-# to the top level board and shield arrays, for more
-# control, add individual board + shield combinations to
-# the `include` property, e.g:
+# DYA Studio 固件构建矩阵
 #
-# board: [ "nice_nano_v2" ]
-# shield: [ "corne_left", "corne_right" ]
-# include:
-#   - board: bdn9_rev2
-#   - board: nice_nano_v2
-#     shield: reviung41
+# 由 `west zmk-build` 驱动（来自 cormoran/zmk-west-commands）
+# 注意：artifact 字段名是 `artifact`，不是官方工作流的 `artifact-name`
 #
 ---
 include:
+  # ================= 无屏版本（flash 余量最大，推荐日常使用） =================
+  - board: nice_nano_v2
+    shield: corne_left
+    snippets: [corne-no-display]
+    artifact: corne_left
+  - board: nice_nano_v2
+    shield: corne_right
+    snippets: [corne-no-display]
+    artifact: corne_right
+
   # ================= OLED 版本 =================
   - board: nice_nano_v2
     shield: corne_left
-    artifact-name: corne_left_oled
+    snippets: [corne-oled]
+    artifact: corne_left_oled
   - board: nice_nano_v2
     shield: corne_right
-    artifact-name: corne_right_oled
+    snippets: [corne-oled]
+    artifact: corne_right_oled
 
-  # ================ nice!view 版本 ================
+  # ================= nice!view 版本 =================
   - board: nice_nano_v2
     shield: corne_left nice_view_adapter nice_view
-    artifact-name: corne_left_niceview
+    artifact: corne_left_niceview
   - board: nice_nano_v2
     shield: corne_right nice_view_adapter nice_view
-    artifact-name: corne_right_niceview
+    artifact: corne_right_niceview
 
-  # ================ 设置重置固件 ================
+  # ================= Studio 常开版本（不需每次解锁） =================
+  # 默认固件在断开连接后会锁定 Studio，需要按住某键解锁。
+  # 下面两版关闭锁定，适合自己日常用、不担心别人乱改配置。
+  - board: nice_nano_v2
+    shield: corne_left
+    snippets: [corne-no-display]
+    cmake-args: -DCONFIG_ZMK_STUDIO_LOCKING=n
+    artifact: corne_left_studio_unlocked
+  - board: nice_nano_v2
+    shield: corne_right
+    snippets: [corne-no-display]
+    cmake-args: -DCONFIG_ZMK_STUDIO_LOCKING=n
+    artifact: corne_right_studio_unlocked
+
+  # ================= 设置重置固件 =================
+  # 刷这个可以把 DYA Studio 里改坏的设置恢复默认
   - board: nice_nano_v2
     shield: settings_reset
-    artifact-name: settings_reset
+    artifact: settings_reset
