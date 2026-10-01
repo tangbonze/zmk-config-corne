@@ -8,6 +8,109 @@ config ZMK_KEYBOARD_NAME
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
 
+# ---------------------------------------------------------------------------
+# central（左手）专属：Studio / RPC / OS 识别 / 默认层
+#
+# 这些只能以 defaults 形式放在这里，而不是 config/corne.conf：
+#  - corne.conf 对两半同时生效，而外设半边没有 ZMK_STUDIO_RPC
+#    （protobuf 只在 central 生成），强开 *_STUDIO_RPC 会因缺少
+#    proto/zmk/custom.pb.h 编译失败；
+#  - 本文件经 Kconfig osource 加载，defaults 在无其他赋值时生效。
+# ---------------------------------------------------------------------------
+
+# ZMK Studio
+config ZMK_STUDIO
+    default y
+
+# OS 识别：按主机自动切换默认层
+# https://github.com/cormoran/zmk-feature-os-detection
+config ZMK_OS_DETECTION
+    default y
+config ZMK_OS_DETECTION_USB
+    default y
+config ZMK_OS_DETECTION_BLE
+    default y
+config ZMK_OS_DETECTION_STUDIO_RPC
+    default y
+
+# 默认层模块（闭区间 0-3，共 4 层）
+# https://github.com/cormoran/zmk-feature-default-layer
+config ZMK_DEFAULT_LAYER
+    default y
+config ZMK_DEFAULT_LAYER_MIN_INDEX
+    default 0
+config ZMK_DEFAULT_LAYER_MAX_INDEX
+    default 3
+config ZMK_DEFAULT_LAYER_STUDIO_RPC
+    default y
+config ZMK_DEFAULT_LAYER_OS_DETECTION
+    default y
+
+# 连接管理：BLE 配置档重命名 / 切换 / 解绑，USB 与蓝牙优先级
+# https://github.com/cormoran/zmk-module-ble-management
+config ZMK_BLE_MANAGEMENT
+    default y
+config ZMK_BLE_MANAGEMENT_STUDIO_RPC
+    default y
+
+# Studio RPC 的各模块扩展
+config ZMK_SETTINGS_RPC_STUDIO
+    default y
+config ZMK_CUSTOM_SETTINGS_STUDIO_RPC
+    default y
+config ZMK_PHYSICAL_LAYOUTS_FEATURE
+    default y
+config ZMK_PHYSICAL_LAYOUTS_FEATURE_STUDIO_RPC
+    default y
+config ZMK_INPUT_STREAM_FEATURE
+    default y
+config ZMK_INPUT_STREAM_FEATURE_STUDIO_RPC
+    default y
+config ZMK_FAST_KEYMAP
+    default y
+config ZMK_FAST_KEYMAP_STUDIO_RPC
+    default y
+config ZMK_FAST_KEYMAP_DEFAULT_LAYER
+    default y
+config ZMK_RUNTIME_MACRO
+    default y
+config ZMK_RUNTIME_MACRO_STUDIO_RPC
+    default y
+config ZMK_BEHAVIOR_LOCAL_ID_TYPE_CRC16
+    default y
+config ZMK_RUNTIME_COMBO
+    default y
+config ZMK_RUNTIME_COMBO_STUDIO_RPC
+    default y
+config ZMK_DEVICE_INFO
+    default y
+config ZMK_DEVICE_INFO_STUDIO_RPC
+    default y
+config ZMK_KSCAN_DIAGNOSTICS
+    default y
+config ZMK_KSCAN_DIAGNOSTICS_STUDIO_RPC
+    default y
+config ZMK_KSCAN_DIAGNOSTICS_SPLIT
+    default y
+config ZMK_WATCHDOG
+    default y
+config ZMK_WATCHDOG_STUDIO_RPC
+    default y
+config ZMK_WATCHDOG_SPLIT_RELAY
+    default y
+config ZMK_WATCHDOG_FREEZE_DETECT
+    default y
+
+# Studio RPC 专属缓冲 / 栈
+config ZMK_STUDIO_RPC_RX_BUF_SIZE
+    default 256
+config ZMK_STUDIO_RPC_TX_BUF_SIZE
+    default 256
+config ZMK_STUDIO_RPC_CUSTOM_SUBSYSTEM_REQUEST_PAYLOAD_MAX_BYTES
+    default 256
+config ZMK_STUDIO_RPC_THREAD_STACK_SIZE
+    default 6000
+
 endif
 
 if SHIELD_CORNE_LEFT || SHIELD_CORNE_RIGHT
