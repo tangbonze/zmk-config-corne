@@ -65,16 +65,17 @@
             // |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  |  DEL |
             // | CTRL |  A  | BT1 | BT2 | BT3 |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
             // | SHFT | OUT |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-            //                    | STUDIO | ->ADJ | SPC |   | ENT |     | ALT |
+            //                    | STUDIO | ->ADJ | USB |   | ENT |     | ALT |
             //
-            // 左侧第 1 枚拇指键：解锁 DYA Studio；第 2 枚：按住进入 ADJUST 层
+            // 左侧第 1 枚拇指键：解锁 DYA Studio；第 2 枚：按住进入 ADJUST 层；
+            // 第 3 枚（Space 位）：切到 USB 输出（Studio USB 连接用）
             // （BT_CLR 移到了 ADJUST 层，避免误触清掉蓝牙配对）
 
             bindings = <
 &trans  &kp EXCL     &kp AT        &kp HASH      &kp DLLR      &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTERISK  &kp LPAR  &kp RPAR  &kp DEL
 &trans  &trans       &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &trans       &kp MINUS  &kp EQUAL  &kp LBKT      &kp RBKT  &kp BSLH  &kp GRAVE
 &trans  &out OUT_TOG  &trans        &trans        &trans        &trans       &kp UNDER  &kp PLUS   &kp LBRC      &kp RBRC  &kp PIPE  &kp TILDE
-                                  &studio_unlock  &mo 3         &trans       &trans     &trans     &trans
+                                  &studio_unlock  &mo 3         &out OUT_USB  &trans     &trans     &trans
             >;
         };
 
