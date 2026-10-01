@@ -14,13 +14,11 @@
 #define RAISE   2
 #define ADJUST  3
 
-&lt {
-};
-
 / {
     conditional_layers {
         compatible = "zmk,conditional-layers";
 
+        // LOWER + RAISE 同按 -> ADJUST（F 键 / 媒体 / 蓝牙管理层）
         tri_layer {
             if-layers = <LOWER RAISE>;
             then-layer = <ADJUST>;
@@ -32,10 +30,12 @@
 
         default_layer {
             // -----------------------------------------------------------------------------------------
-            // |  TAB |  Q  |  W  |  E  |  R  |  T      |   |  Y      |  U   |  I  |  O  |  P  | BKSP |
-            // | CTRL |  A  |  S  |  D  |  F  |  G      |   |  H      |  J   |  K  |  L  |  ;  |  '   |
-            // | SHFT |  Z  |  X  |  C  |  V  |  B      |   |  N      |  M   |  ,  |  .  |  /  | SHFT |
-            //                    | GUI | LWR |  SPC    |   | RGUI/ENT | RSE  | ALT |
+            // |  TAB |  Q  |  W  |  E  |  R  |  T      |   |  Y         |  U         |  I  |  O  |  P  | BKSP |
+            // | CTRL |  A  |  S  |  D  |  F  |  G      |   |  H         |  J         |  K  |  L  |  ;  |  '   |
+            // | SHFT |  Z  |  X  |  C  |  V  |  B      |   |  N         |  M         |  ,  |  .  |  /  | SHFT |
+            //                    | GUI | LWR |  SPC    |   | ENT        | BKSP/RSE   | ALT |
+            //
+            // 右侧第 2 枚拇指键（ENT 右边）：点按 = 退格，按住 = RAISE 层
 
             bindings = <
 &kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y      &kp U            &kp I      &kp O    &kp P     &kp BSPC
@@ -47,9 +47,9 @@
 
         lower_layer {
             // -----------------------------------------------------------------------------------------
-            // |  TAB |  1  |  2  |  3  |  4  |  5    |   |  6  |  7  |  8  |  9  |  0  | DEL  |
-            // |      | LFT | DWN |  UP | RGT |       |   |     |     |     |     |     |      |
-            // | SHFT |     |     |     |     |       |   |     |     |     |     |     |
+            // |  ESC |  1  |  2  |  3  |  4  |  5    |   |  6  |  7  |  8  |  9  |  0  | BKSP |
+            // | CAPS | LFT | DWN |  UP | RGT |       |   | Vo- | MUT | Vo+ |     |     |      |
+            // | SHFT |     |     |     |     |       |   |     |     |     |     |     |      |
             //                    | GUI |     | SPC   |   | ENT |     | ALT |
 
             bindings = <
@@ -62,34 +62,38 @@
 
         raise_layer {
             // -----------------------------------------------------------------------------------------
-            // | ESC  |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
-            // | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  ~   |
-            // | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-            //                    | GUI |     | SPC |   | ENT |     | ALT |
-            // Raise + 左侧第一枚拇指键：解锁 DYA Studio
-            // Raise + 左侧第三枚拇指键（Space）：切到 USB 输出（Studio USB 连接用）
+            // |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  |  DEL |
+            // | CTRL |  A  | BT1 | BT2 | BT3 |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
+            // | SHFT | OUT |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
+            //                    | STUDIO | ->ADJ | SPC |   | ENT |     | ALT |
+            //
+            // 左侧第 1 枚拇指键：解锁 DYA Studio；第 2 枚：按住进入 ADJUST 层
+            // （BT_CLR 移到了 ADJUST 层，避免误触清掉蓝牙配对）
 
             bindings = <
-&trans  &kp EXCL    &kp AT        &kp HASH      &kp DLLR      &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTERISK  &kp LPAR  &kp RPAR  &kp DEL
-&trans  &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &trans       &kp MINUS  &kp EQUAL  &kp LBKT      &kp RBKT  &kp BSLH  &kp GRAVE
+&trans  &kp EXCL     &kp AT        &kp HASH      &kp DLLR      &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTERISK  &kp LPAR  &kp RPAR  &kp DEL
+&trans  &trans       &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &trans       &kp MINUS  &kp EQUAL  &kp LBKT      &kp RBKT  &kp BSLH  &kp GRAVE
 &trans  &out OUT_TOG  &trans        &trans        &trans        &trans       &kp UNDER  &kp PLUS   &kp LBRC      &kp RBRC  &kp PIPE  &kp TILDE
-                                  &studio_unlock  &mo 3         &out OUT_USB  &trans     &trans     &trans
+                                  &studio_unlock  &mo 3         &trans       &trans     &trans     &trans
             >;
         };
 
-        Bootloader {
+        adjust_layer {
+            // -----------------------------------------------------------------------------------------
+            // |  F1 | F2 | F3 | F4 | F5 | F6  |   | F7  | F8  | F9  | F10 | F11 | F12   |
+            // | bri+|    |prev| PP |next|     |   |     | MUT | Vo- | Vo+ |     |       |
+            // | bri-|    |    |    |    | BT1 |   | BT2 |     |     |     |     | BTCLR |
+            //                      | BTLDR |     |     |     |     |     |
+            //
+            // 进入方式：LOWER + RAISE 同按（conditional layer），或 RAISE 中按住左侧
+            // 第 2 枚拇指键。左下角拇指键 = 进 bootloader（三键组合，不易误触）。
+
             bindings = <
-&bootloader  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &bootloader
-&trans       &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-&trans       &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-                             &trans  &trans  &trans    &trans  &trans  &trans
+&kp F1        &kp F2  &kp F3     &kp F4    &kp F5     &kp F6        &kp F7        &kp F8    &kp F9      &kp F10      &kp F11      &kp F12
+&kp C_BRI_UP  &trans  &kp C_PREV &kp C_PP  &kp C_NEXT &trans        &trans        &trans    &kp C_MUTE  &kp C_VOL_DN &kp C_VOL_UP &trans
+&kp C_BRI_DN  &trans  &trans     &trans    &trans     &bt BT_SEL 0  &bt BT_SEL 1  &trans    &trans      &trans       &trans       &bt BT_CLR
+                                           &bootloader  &trans        &trans        &trans    &trans      &trans
             >;
         };
-
-        // -----------------------------------------------------------------------------------------
-        // |  F1      |  F2 |  F3   |  F4        | F5   | F6  |   | F7  |  F8 |  F9 | F10  | F11 | F12    |
-        // | bri up   |     | prev  | Play/Pause | next |     |   |     | MUT | Vo- | vol+ |     |        |
-        // | bri down |     |       |            | BT1  | BT2 |   |     |     |     |      |     | BTCLR  |
-        //                          |            | LWR  |     |   |     | RSE |     |
     };
 };

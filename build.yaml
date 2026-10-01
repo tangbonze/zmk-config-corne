@@ -26,12 +26,15 @@ include:
     artifact: corne_right_oled
 
   # ================= nice!view 版本 =================
+  # corne-no-display 用于禁用板载 OLED（否则 SSD1306 驱动照样编译进固件；
+  # nice_view.overlay 已把 zephyr,display 指向 nice_view）
   - board: nice_nano//zmk
     shield: corne_left nice_view_adapter nice_view
-    snippets: [studio-rpc-usb-uart]
+    snippets: [corne-no-display, studio-rpc-usb-uart]
     artifact: corne_left_niceview
   - board: nice_nano//zmk
     shield: corne_right nice_view_adapter nice_view
+    snippets: [corne-no-display]
     artifact: corne_right_niceview
 
   # ================= Studio 常开版本（不需每次解锁） =================
