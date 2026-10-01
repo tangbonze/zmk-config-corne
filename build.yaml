@@ -8,7 +8,7 @@ include:
   # ================= 无屏版本（flash 余量最大，推荐日常使用） =================
   - board: nice_nano//zmk
     shield: corne_left
-    snippets: [corne-no-display]
+    snippets: [corne-no-display, studio-rpc-usb-uart]
     artifact: corne_left
   - board: nice_nano//zmk
     shield: corne_right
@@ -18,7 +18,7 @@ include:
   # ================= OLED 版本 =================
   - board: nice_nano//zmk
     shield: corne_left
-    snippets: [corne-oled]
+    snippets: [corne-oled, studio-rpc-usb-uart]
     artifact: corne_left_oled
   - board: nice_nano//zmk
     shield: corne_right
@@ -28,6 +28,7 @@ include:
   # ================= nice!view 版本 =================
   - board: nice_nano//zmk
     shield: corne_left nice_view_adapter nice_view
+    snippets: [studio-rpc-usb-uart]
     artifact: corne_left_niceview
   - board: nice_nano//zmk
     shield: corne_right nice_view_adapter nice_view
@@ -38,7 +39,7 @@ include:
   # 下面两版关闭锁定，适合自己日常用、不担心别人乱改配置。
   - board: nice_nano//zmk
     shield: corne_left
-    snippets: [corne-no-display]
+    snippets: [corne-no-display, studio-rpc-usb-uart]
     cmake-args: -DCONFIG_ZMK_STUDIO_LOCKING=n
     artifact: corne_left_studio_unlocked
   - board: nice_nano//zmk
