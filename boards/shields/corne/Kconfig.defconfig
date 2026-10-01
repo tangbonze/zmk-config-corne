@@ -22,6 +22,18 @@ config ZMK_SPLIT_ROLE_CENTRAL
 config ZMK_STUDIO
     default y
 
+# 分体电量代理（central 从外设读取电量后统一上报）
+# 放到这里而不是 corne.conf：外设半边 ZMK_SPLIT_ROLE_CENTRAL=n，
+# 在 conf 里赋值会触发 "assigned the value 'y' but got ''" 的 Kconfig 警告。
+config ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY
+    default y
+config ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING
+    default y
+
+# central 的 split 运行栈（外设半边无此符号依赖，故同样放这里）
+config ZMK_SPLIT_BLE_CENTRAL_SPLIT_RUN_STACK_SIZE
+    default 768
+
 # OS 识别：按主机自动切换默认层
 # https://github.com/cormoran/zmk-feature-os-detection
 config ZMK_OS_DETECTION
@@ -76,8 +88,13 @@ config ZMK_RUNTIME_MACRO
     default y
 config ZMK_RUNTIME_MACRO_STUDIO_RPC
     default y
-config ZMK_BEHAVIOR_LOCAL_ID_TYPE_CRC16
-    default y
+# 行为本地 ID 编码方式是一个 choice，必须用 choice 块设默认值：
+# 直接给 choice 成员（ZMK_BEHAVIOR_LOCAL_ID_TYPE_CRC16）写 default 会触发
+# Zephyr 4.1 的 "default on the choice symbol" 致命警告，导致所有目标
+# Kconfig 阶段直接中止（含 settings_reset）。
+choice ZMK_BEHAVIOR_LOCAL_ID_TYPE
+    default ZMK_BEHAVIOR_LOCAL_ID_TYPE_CRC16
+endchoice
 config ZMK_RUNTIME_COMBO
     default y
 config ZMK_RUNTIME_COMBO_STUDIO_RPC
