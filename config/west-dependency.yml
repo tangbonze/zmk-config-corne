@@ -8,6 +8,8 @@ manifest:
       url-base: https://github.com/cormoran
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    - name: tangbonze
+      url-base: https://github.com/tangbonze
   projects:
     # 编译命令扩展：提供 `west zmk-build` 等命令
     - name: zmk-west-commands
@@ -84,6 +86,12 @@ manifest:
     - name: zmk-feature-watchdog
     # 电池历史曲线
     - name: zmk-module-battery-history
+
+    # ZMK KeyTester 物理矩阵直读模块（WebHID Raw HID）
+    # https://github.com/tangbonze/zmk-matrix-tester
+    - name: zmk-matrix-tester
+      remote: tangbonze
+      revision: main
 
   self:
     path: config
