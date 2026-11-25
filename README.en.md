@@ -59,6 +59,41 @@ for wireless or an Elite-C v4 for wired.
 > is connected**, and **don't connect a battery when using the wired connection**. The
 > firmware here targets the wireless (nice!nano) build.
 
+## Keymap Layout
+
+The diagrams below are split by layer from `keymap-drawer/corne.svg` and are
+regenerated automatically by `.github/workflows/keymap_drawer.yml` whenever
+`config/corne.keymap` changes.
+
+**Default layer (`default`)**
+
+![default layer](keymap-drawer/layers/default.svg)
+
+**LOWER layer (Numbers / Arrows / Volume)**
+
+![lower layer](keymap-drawer/layers/lower.svg)
+
+**RAISE layer (Symbols / Bluetooth / Studio unlock)**
+
+![raise layer](keymap-drawer/layers/raise.svg)
+
+**ADJUST layer (F-keys / Brightness / Media / Bootloader)**
+
+![adjust layer](keymap-drawer/layers/adjust.svg)
+
+Full drawing (all 4 layers): [`keymap-drawer/corne.svg`](keymap-drawer/corne.svg)
+
+### Layers and how to reach them
+
+| Index | Label | Contents | How to enter |
+| --- | --- | --- | --- |
+| 0 | `default` | Base QWERTY layout | — |
+| 1 | `lower` | Numbers, arrow keys, volume controls | Hold left thumb #2 (`&mo 1`) |
+| 2 | `raise` | Symbols, Bluetooth profiles, output toggle, `&studio_unlock` | Tap backspace / hold right thumb #2 (`&lt 2 BACKSPACE`) |
+| 3 | `adjust` | F1–F12, brightness, media controls, `&bootloader`, `&out OUT_TOG`, `&bt BT_CLR` | Hold `lower` + `raise` together, or hold left thumb #2 on `raise` (`&mo 3`) |
+
+> The rightmost thumb key on `lower`, `raise`, and `adjust` is `&mo 0`, providing an escape hatch back to `default`.
+
 ## DYA Studio
 
 Open <https://studio.dya.cormoran.works/> and pick a connection on the splash screen:
@@ -285,6 +320,16 @@ snippets/
   corne-no-display/       Disables the on-board OLED to reclaim flash
 zephyr/module.yml         Tells west where to find boards / snippets
 build.yaml                Build matrix
+keymap_drawer.config.yaml keymap-drawer styling and icon mapping
+keymap-drawer/
+  corne.yaml              Parsed keymap YAML for keymap-drawer
+  corne.svg               Combined SVG drawing (all 4 layers)
+  layers/*.svg            Per-layer SVG files embedded in the README
+tools/
+  split_keymap_svg.py     Splits corne.svg into per-layer SVG files
+.github/workflows/
+  build.yml               ZMK firmware build workflow
+  keymap_drawer.yml       Automatic keymap redraw workflow
 ```
 
 > `corne.dtsi`, `corne_left.overlay`, `corne_right.overlay` and the physical layout

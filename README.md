@@ -51,6 +51,40 @@ Corne 分体键盘的 ZMK 固件配置，已接入 [DYA Studio](https://studio.d
 > ⚠️ 该板是无线 + 有线两用设计：**插电池时不要用 TRRS**，**用有线时不要接电池**。
 > 本仓库的固件为无线版本（nice!nano）。
 
+## Keymap 布局
+
+以下图形由 `keymap-drawer/corne.svg` 按层拆分而来，随 `config/corne.keymap`
+变更通过 GitHub Actions（`keymap_drawer.yml`）自动重新生成。
+
+**默认层（default）**
+
+![default 默认层](keymap-drawer/layers/default.svg)
+
+**LOWER（数字 / 方向 / 音量）**
+
+![lower 数字层](keymap-drawer/layers/lower.svg)
+
+**RAISE（符号 / 蓝牙 / Studio 解锁）**
+
+![raise 符号层](keymap-drawer/layers/raise.svg)
+
+**ADJUST（F 键 / 亮度 / 媒体 / Bootloader）**
+
+![adjust 功能层](keymap-drawer/layers/adjust.svg)
+
+完整图（含全部 4 层）：[`keymap-drawer/corne.svg`](keymap-drawer/corne.svg)
+
+### 图层与进入方式
+
+| 索引 | 标签 | 内容 | 进入方式 |
+| --- | --- | --- | --- |
+| 0 | `default` | 主键区（QWERTY） | — |
+| 1 | `lower` | 数字、方向键、音量控制 | 按住左手第 2 枚拇指键（`&mo 1`） |
+| 2 | `raise` | 符号、蓝牙配置档、USB/BLE 切换、`&studio_unlock` | 右手第 2 枚拇指键短按退格 / 长按进层（`&lt 2 BACKSPACE`） |
+| 3 | `adjust` | F1–F12、亮度、媒体控制、`&bootloader`、`&out OUT_TOG`、`&bt BT_CLR` | `lower` + `raise` 同按，或在 `raise` 层按住左手第 2 枚拇指键（`&mo 3`） |
+
+> `lower` / `raise` / `adjust` 三层最右侧拇指键均为 `&mo 0` 兜底，按住可临时回到 `default` 层。
+
 ## DYA Studio
 
 浏览器打开 <https://studio.dya.cormoran.works/>，按 splash 页面选择连接方式：
@@ -256,6 +290,16 @@ snippets/
   corne-no-display/       禁用板载 OLED，回收 flash
 zephyr/module.yml         告诉 west 在哪里找 boards / snippets
 build.yaml                构建矩阵
+keymap_drawer.config.yaml keymap-drawer 样式与键位图标配置
+keymap-drawer/
+  corne.yaml              keymap-drawer 解析后的中间描述
+  corne.svg               完整键位图（含全部 4 层）
+  layers/*.svg            按层拆分的独立 SVG（供 README 嵌入）
+tools/
+  split_keymap_svg.py     将 corne.svg 拆分为各层独立 SVG
+.github/workflows/
+  build.yml               ZMK 固件构建工作流
+  keymap_drawer.yml       随 config/** 变更自动重绘 keymap 图
 ```
 
 > `corne.dtsi` / `corne_left.overlay` / `corne_right.overlay` 以及物理布局
